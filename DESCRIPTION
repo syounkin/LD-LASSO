@@ -2,9 +2,9 @@ Package: ldlasso
 Type: Package
 Title: LD LASSO Regression for SNP Association Study
 Version: 3.1
-Date: Feb. 14, 2011
+Date: November 9, 2011
 Author: Samuel G. Younkin
-Maintainer: <samuel.younkin@gmail.com>
+Maintainer: <syounkin@jhsph.edu>
 Description: ldlasso requires data be of class gwaa.data from the the package GenABEL
 License: GPL (>= 2)
 Depends: R (>= 2.6.0), GenABEL, quadprog
