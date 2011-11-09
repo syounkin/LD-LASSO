@@ -1,6 +1,6 @@
 Package: ldlasso
 Type: Package
-Title: LD LASSO Regression for SNP Association Study
+Title: LD LASSO Regression for SNP Association Study (Methods and Classes)
 Version: 3.1
 Date: November 9, 2011
 Author: Samuel G. Younkin
