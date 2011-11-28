@@ -1,6 +1,1 @@
-Sam I am
-I am Sam
-I would learn github on a boat
-I might punch you in the throat
-I am Sam
-Sam I am
+This package is an update of the package 'ldlasso' available at CRAN.  In it we convert to an S4 methods and classes style as well as improve upon the statistical analyses.
