@@ -1,0 +1,2 @@
+setGeneric("ldlasso", signature = c("ldlasso.obj"), function( ldlasso.obj ) standardGeneric("ldlasso") )
+setMethod("ldlasso", signature("ldlasso"), function( ldlasso.obj ) print(ldlasso.obj@geno) )
