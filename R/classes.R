@@ -13,5 +13,20 @@ if( !all(pheno %in% 0:1 ) )
     return("Some phenotype is not in (0, 1)")
 })
 
+setClass("ldlassoSolution", contains = "ldlasso", representation = representation( beta = "numeric", indexmat = "matrix", thresh = "numeric" ) )
 
-setClass("ldlassoSolution", contains = "ldlasso", representation = representation( beta = "numeric" ) )
+setValidity("ldlassoSolution", function(object){
+	if( sum(abs(object@beta)) > (object@s1+1e-8) )
+          return("LASSO constraint violated")
+      })
+
+## setValidity("ldlassoSolution", function(object){
+##   if( any( abs(abs(object@beta[object@indexmat[,1]]) - abs(object@beta[object@indexmat[,2]]) ) > ( -object@s2*log(cor(object@geno)[object@indexmat]^2) + object@delta ) ) )
+##           return("LD LASSO constraint violated")
+## })
+
+
+
+# LD lASSO constraint
+#if( any( abs(abs(object@beta[object@indexmat[,1]]) - abs(object@beta[object@indexmat[,2]]) ) > ( -object@s2*log(cor(object@geno)[object@indexmat]^2) + object@delta ) ) )
+
