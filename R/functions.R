@@ -5,7 +5,7 @@ ldlassoSolve <- function( ldlasso.obj ){
   s1 <- ldlasso.obj@s1
   s2 <- ldlasso.obj@s2
   r2 <- ldlasso.obj@r2
-  delta <- ldlasso.obj@delta
+  delta <- 1e-6
 
   p <- ncol(geno)
   index.mat <- which(cor(geno)^2 > r2 & lower.tri(matrix(1, p, p)), arr.ind = TRUE )
@@ -53,6 +53,10 @@ ldlassoSolve <- function( ldlasso.obj ){
 
   beta <- result$qp$solution[1:p]
 
+  if( sum(abs(beta)) > s1 ) stop( "LASSO constraint has been violated." )
+
+  if( any( abs(abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) ) - ( -s2*log(cor(geno)[index.mat]^2) + delta ) > 1e-10 ) ) stop ("LD LASSO constraint violated")
+  
   return(beta)
   
   }
