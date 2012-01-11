@@ -1,4 +1,6 @@
-setClass( "ldlasso", representation( geno = "matrix", pheno = "integer", s1 = "numeric", s2 = "numeric", r2 = "numeric", beta = "numeric" ) )
+setClassUnion("numericOrNULL", c("numeric", "NULL"))
+
+setClass( "ldlasso", representation( geno = "matrix", pheno = "integer", s1 = "numericOrNULL", s2 = "numeric", r2 = "numeric", beta = "numeric" ) )
 
 ldlasso =
 # an ldlasso object with genotype matrix (subjects by SNPs) and phenotype vector
@@ -14,3 +16,5 @@ function( geno, pheno, s1, s2, r2 )
      rownames(geno) <- paste( "sub", 1:nrow(geno), sep = "" )
   new( "ldlasso", geno = geno, pheno = pheno, s1 = s1, s2 = s2, r2 = r2 )
 }
+
+
