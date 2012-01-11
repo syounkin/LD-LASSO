@@ -5,7 +5,7 @@ ldlassoSolve <- function( ldlasso.obj ){
   s1 <- ldlasso.obj@s1
   s2 <- ldlasso.obj@s2
   r2 <- ldlasso.obj@r2
-  delta <- ldlasso.obj@delta
+  delta <- 1e-6
 
   p <- ncol(geno)
   index.mat <- which(cor(geno)^2 > r2 & lower.tri(matrix(1, p, p)), arr.ind = TRUE )
