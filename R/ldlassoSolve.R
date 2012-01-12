@@ -52,10 +52,6 @@ ldlassoSolve <- function( ldlasso.obj ){
   result <- list(  qp = qp, y = y, A = A, r2.vec = r2.vec, b0 = b0, OR = OR )
 
   beta <- result$qp$solution[1:p]
-
-  if( sum(abs(beta)) > s1 ) stop( "LASSO constraint has been violated." )
-
-  if( any( abs(abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) ) - ( -s2*log(cor(geno)[index.mat]^2) + delta ) > 1e-10 ) ) stop ("LD LASSO constraint violated")
   
   return(beta)
   
