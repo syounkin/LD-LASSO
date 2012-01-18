@@ -1,0 +1,2 @@
+# exclude .Rhistory from all commits
+.Rhistory
