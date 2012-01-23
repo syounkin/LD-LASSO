@@ -1,4 +1,4 @@
-findS1 <- function( ldlasso.obj, B = 1e1, alpha = 0.05, tol = 1e-3 ){
+findS1 <- function( ldlasso.obj, B = 1e1, alpha = 0.05, tol = 1e-2 ){
   cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n\n", sep = "" ) )
   s1.low <- 0; s1.hi <- 10; fp.rate <- 1;  
   while( abs( fp.rate - alpha ) > tol ){
