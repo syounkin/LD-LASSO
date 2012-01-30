@@ -51,8 +51,8 @@ ldlassoSolve <- function( ldlasso.obj ){
   qp <- solve.QP(Dmat = I_3p, dvec = yc, Amat = A, bvec = b0, meq = p, factorized = FALSE)
   result <- list(  qp = qp, y = y, A = A, r2.vec = r2.vec, b0 = b0, OR = OR )
 
-  beta <- result$qp$solution[1:p]
+  ldlasso.obj@beta <- result$qp$solution[1:p]
   
-  return(beta)
+  return(ldlasso.obj)
   
   }
