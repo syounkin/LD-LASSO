@@ -9,8 +9,8 @@ function(object){
   if( length(object@beta) == 0 ){
     cat( "\nNo solution.\n")
   }else{
-    cat("\nSummary of solution vector (beta):\n")
-    print(summary(object@beta))
+    cat("\nIndices of selected SNPs:\n")
+    cat( which( abs(object@beta) > 1e-6 ), "\n" )
   }
   ## cat("genotypes:\n")
   ## print(head(object@geno))
