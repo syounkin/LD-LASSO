@@ -6,23 +6,26 @@ setMethod("findS1", "ldlasso", function( object, ... ) {
   fn.findS1(object, ... )
 })
 
-fn.findS1 <- function( ldlasso.obj, B  = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = TRUE ){
+fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = TRUE ){
   if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
-
+  if( 2/ncol(ldlasso.obj@geno) > alpha ){
+    alpha <- 1/ncol(ldlasso.obj@geno)
+    cat( "Warning: Decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
+  }
   s1.low <- 0; s1.hi <- 10; fp.rate <- 1;
 
   while( abs( fp.rate - alpha ) > tol ){
     fp.tot <- 0
     s1 <- mean(c(s1.low,s1.hi))
     ldlasso.obj@s1 <- s1
-    for( i in 1:B ){
+    for( i in 1:iter ){
       ldlasso.obj@pheno <- ldlasso.obj@pheno[sample(length(ldlasso.obj@pheno))]
-      ldlasso.obj <- ldlassoSolve(ldlasso.obj)
+      ldlasso.obj <- solve(ldlasso.obj)
       fp <- sum( abs( ldlasso.obj@beta ) > 1e-6 )
       fp.tot <- fp + fp.tot
     }
-    fp.rate <- fp.tot/ncol(ldlasso.obj@geno)/B
-    ## cat( c(fp.rate, "\n") )
+    fp.rate <- fp.tot/ncol(ldlasso.obj@geno)/iter
+    if(verbose) cat( c(s1, " ", fp.rate, "\n") )
     if( fp.rate < alpha ){
       ldlasso.obj@s1 <- mean(c(s1,s1.hi))
       s1.low <- s1
