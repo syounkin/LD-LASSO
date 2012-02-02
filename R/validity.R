@@ -9,7 +9,7 @@ validldlasso = function( object ){
   if( object@s2 <= 0 )
     return( "Parameter s2 is not positive" )
   if( length(object@beta) > 0 )
-    if( sum(abs(object@beta)) > object@s1 )
+    if( (  sum(abs(object@beta)) - object@s1 ) > 1e-10 )
       return( "LASSO constraint has been violated." )
   if( length(object@beta) > 0 ){
       p <- ncol(object@geno)
