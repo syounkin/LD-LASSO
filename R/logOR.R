@@ -13,5 +13,15 @@ logOR <- function( geno, pheno){
   y <- log(OR)
   var_y <- ifelse( f1 == 0 | f2 == 0, 1e6, ( n0*f1*(1-f1) + n1*f2*(1-f2) ) / ( 2*n0*n1*f1*f2*(1-f1)*(1-f2) ) )
   y <- y/sqrt(var_y)
-  return(list( OR = OR, y = y, var_y = var_y, f1 = f1, f2 = f2, f0 = f0 ) )
+  return(list( OR = OR,
+              y = y,
+              var_y = var_y,
+              f1 = f1,
+              f2 = f2,
+              f0 = f0,
+              X2 = X2,
+              X1 = X1,
+              n0 = n0,
+              n1 = n1 )
+         )
 }
