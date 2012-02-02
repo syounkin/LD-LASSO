@@ -1,5 +1,8 @@
 ldlassoSolve <- function( ldlasso.obj ){
 
+  if( is.null(ldlasso.obj@s1) )
+    return( "Cannot solve!  The parameter s1 is NULL" )
+
   geno <- ldlasso.obj@geno
   pheno <- ldlasso.obj@pheno
   s1 <- ldlasso.obj@s1
@@ -17,18 +20,15 @@ ldlassoSolve <- function( ldlasso.obj ){
     D[i,index.mat[i,2]] <- 1
     r2.vec <- c( r2.vec, cor(geno[,index.mat[i,1]],geno[,index.mat[i,2]])^2 )
   }
-  X2 <- geno[pheno == 1,] # 1 is case
-  X1 <- geno[pheno == 0,] # 0 is control
-  f2 <- colSums(X2)/2/dim(X2)[1]
-  f1 <- colSums(X1)/2/dim(X1)[1]
-  n0 <- sum( pheno == 0 )
-  n1 <- sum( pheno == 1 )
-  OR <- ifelse( ( f2 == 0 & f1 == 0) | (f2 == 1 & f1 == 1), 1, f2/(1-f2)/(f1/(1-f1)) )
-  OR <- ifelse( OR == Inf, 1e6, OR )
-  OR <- ifelse( OR == 0, 1/1e6, OR )
-  y <- log(OR)
-  var_y <- ifelse( f1 == 0 | f2 == 0, 1e6, ( n0*f1*(1-f1) + n1*f2*(1-f2) ) / ( 2*n0*n1*f1*f2*(1-f1)*(1-f2) ) )
-  y <- y/sqrt(var_y)
+
+  X2 <- ldlasso.obj@X.case
+  X1 <- ldlasso.obj@X.con
+  f2 <- ldlasso.obj@maf.case
+  f1 <- ldlasso.obj@maf.con
+  n0 <- ldlasso.obj@n.con
+  n1 <- ldlasso.obj@n.case
+  y <- ldlasso.obj@logOR.norm
+ 
   ldlasso.const <- -s2*log(r2.vec) + delta
 
   One <- rep( 1, p )
@@ -49,9 +49,11 @@ ldlassoSolve <- function( ldlasso.obj ){
   b0 <- c( rep( Zero, 3 ), -s1, rep( -ldlasso.const , 2 )  )
 
   qp <- solve.QP(Dmat = I_3p, dvec = yc, Amat = A, bvec = b0, meq = p, factorized = FALSE)
-  result <- list(  qp = qp, y = y, A = A, r2.vec = r2.vec, b0 = b0, OR = OR )
+  result <- list(  qp = qp, A = A, r2.vec = r2.vec, b0 = b0 )
 
   ldlasso.obj@beta <- result$qp$solution[1:p]
+
+  stopifnot(validObject(ldlasso.obj))
   
   return(ldlasso.obj)
   
