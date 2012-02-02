@@ -12,7 +12,11 @@ setClass( "ldlasso", representation(
                                     var = "numeric",
                                     maf.case = "numeric",
                                     maf.con = "numeric",
-                                    maf.tot = "numeric"
+                                    maf.tot = "numeric",
+                                    X.case = "matrix",
+                                    X.con = "matrix",
+                                    n.case = "numeric",
+                                    n.con = "numeric"
                                     )
          )
 
@@ -29,7 +33,23 @@ function( geno, pheno, s1, s2, r2 )
      colnames(geno) <- paste( "SNP", 1:ncol(geno), sep = "" )
   if(is.null(rownames(geno)))
      rownames(geno) <- paste( "sub", 1:nrow(geno), sep = "" )
-  new( "ldlasso", geno = geno, pheno = pheno, s1 = s1, s2 = s2, r2 = r2, OR = logOR.obj$OR, logOR.norm = logOR.obj$y, var = logOR.obj$var_y, maf.case = logOR.obj$f2, maf.con = logOR.obj$f1, maf.tot = logOR.obj$f0 )
+  new( "ldlasso",
+      geno = geno,
+      pheno = pheno,
+      s1 = s1,
+      s2 = s2,
+      r2 = r2,
+      OR = logOR.obj$OR,
+      logOR.norm = logOR.obj$y,
+      var = logOR.obj$var_y,
+      maf.case = logOR.obj$f2,
+      maf.con = logOR.obj$f1,
+      maf.tot = logOR.obj$f0,
+      X.case = logOR.obj$X2,
+      X.con = logOR.obj$X1,
+      n.case = logOR.obj$n1,
+      n.con = logOR.obj$n0
+      )
 }
 
 
