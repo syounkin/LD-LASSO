@@ -42,12 +42,12 @@ ldlassoSolve <- function( ldlasso.obj ){
   A <- t(rbind( A1, A2, A3, A4, A5, A6 ))
   b0 <- c( rep( Zero, 3 ), -s1, rep( -ldlasso.const , 2 )  )
   qp <- solve.QP(Dmat = I_3p, dvec = yc, Amat = A, bvec = b0, meq = p, factorized = FALSE)
-  result <- list(  qp = qp, A = A, r2.vec = r2.vec, b0 = b0 )
-  ldlasso.obj@beta <- result$qp$solution[1:p]
-  #object <- ldlasso.obj
-  good <- all( abs(abs(ldlasso.obj@beta[index.mat[,1]]) - abs(ldlasso.obj@beta[index.mat[,2]]) ) - ldlasso.const < 1e-8 )
-  #err <- sum(ifelse( t(A)%*%yc < b0, b0 - t(A)%*%yc, 0 ))
-  #cat( err, "\n" )
-  stopifnot(good)
+  beta <- qp$solution[1:p]
+  betac <- c( beta, ifelse( beta > 0, beta, 0 ), ifelse( beta <=0, -beta, 0 ) )
+  good <- all( abs( abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) )  - ldlasso.const  < 1e-6 )
+  err <- sum(ifelse( t(A)%*%betac < b0, b0 - t(A)%*%betac, 0 ))
+##  cat( err, "\n" )
+  if(!good) cat( "Warning! Bad solution from solve.QP.\nerr = ", err, "\n", sep = "" )
+  ldlasso.obj@beta <- beta
   return(ldlasso.obj)
 }
