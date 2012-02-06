@@ -10,7 +10,7 @@ fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 
   if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
   if( 2/ncol(ldlasso.obj@geno) > alpha ){
     alpha <- 1/ncol(ldlasso.obj@geno)
-    cat( "Warning: Decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
+    cat( "decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
   }
   s1.low <- 0; s1.hi <- 5; fp.rate <- 1;
   pheno <- ldlasso.obj@pheno
