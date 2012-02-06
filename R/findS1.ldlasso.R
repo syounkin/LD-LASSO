@@ -6,20 +6,26 @@ setMethod("findS1", "ldlasso", function( object, ... ) {
   fn.findS1(object, ... )
 })
 
-fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = TRUE ){
+fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = FALSE ){
   if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
   if( 2/ncol(ldlasso.obj@geno) > alpha ){
     alpha <- 1/ncol(ldlasso.obj@geno)
     cat( "Warning: Decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
   }
   s1.low <- 0; s1.hi <- 5; fp.rate <- 1;
-
+  pheno <- ldlasso.obj@pheno
   while( abs( fp.rate - alpha ) > tol ){
     fp.tot <- 0
     s1 <- mean(c(s1.low,s1.hi))
     ldlasso.obj@s1 <- s1
     for( i in 1:iter ){
-      ldlasso.obj@pheno <- ldlasso.obj@pheno[sample(length(ldlasso.obj@pheno))]
+      pheno.perm <- pheno[sample(length(pheno))]
+      ldlasso.obj <- ldlasso(geno = ldlasso.obj@geno,
+                             pheno = pheno.perm,
+                             s1 = ldlasso.obj@s1,
+                             s2 = ldlasso.obj@s2,
+                             r2 = ldlasso.obj@r2
+                             )
       ldlasso.obj <- solve(ldlasso.obj)
       fp <- sum( abs( ldlasso.obj@beta ) > 1e-6 )
       fp.tot <- fp + fp.tot
@@ -34,8 +40,14 @@ fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 
       s1.hi <- s1
     }
   }
-  ldlasso.obj@s1 <- s1
+  ldlasso.obj <- ldlasso(geno = ldlasso.obj@geno,
+                             pheno = pheno,
+                             s1 = s1,
+                             s2 = ldlasso.obj@s2,
+                             r2 = ldlasso.obj@r2
+                             )
   ldlasso.obj <- solve(ldlasso.obj)
+  if(!validObject(ldlasso.obj)) cat( "warning: invalid object being returned from findS1.\n")
   if( !setS1 ) ldlasso.obj@s1 <- NULL
   return(ldlasso.obj)
 }
