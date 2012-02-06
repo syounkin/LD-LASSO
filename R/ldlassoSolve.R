@@ -47,7 +47,7 @@ ldlassoSolve <- function( ldlasso.obj ){
   good <- all( abs( abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) )  - ldlasso.const  < 1e-6 )
   err <- sum(ifelse( t(A)%*%betac < b0, b0 - t(A)%*%betac, 0 ))
 ##  cat( err, "\n" )
-  if(!good) cat( "Warning! Bad solution from solve.QP.\nerr = ", err, "\n", sep = "" )
+  if(!good) cat( "err = ", err, "\n", sep = "" )
   ldlasso.obj@beta <- beta
   return(ldlasso.obj)
 }

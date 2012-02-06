@@ -15,7 +15,9 @@ cleanGeno <- function( ldlasso.obj, ... ){
     Xa <- Xa[,-index.vec]
   }
   if( length(index.vec)!=0 ){
-    cat( "Removed SNPs with indices", index.vec, "\n", sep = "" )
+    cat( "Removed SNPs with indices:\n")
+    cat( index.vec, sep = "," )
+    cat( "\n" )
     ldlasso.obj <- ldlasso(geno = Xa,
                          pheno = ldlasso.obj@pheno,
                          s1 = ldlasso.obj@s1,
