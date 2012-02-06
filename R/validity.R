@@ -11,12 +11,12 @@ validldlasso = function( object ){
   if( length(object@beta) > 0 )
     if( (  sum(abs(object@beta)) - object@s1 ) > 1e-10 )
       return( "LASSO constraint has been violated." )
-  ## if( length(object@beta) > 0 ){
-  ##     p <- ncol(object@geno)
-  ##     index.mat <- which(cor(object@geno)^2 > object@r2 & lower.tri(matrix(1, p, p)), arr.ind = TRUE )
-  ##     if( any( abs(abs(object@beta[index.mat[,1]]) - abs(object@beta[index.mat[,2]]) ) - ( -object@s2*log(cor(object@geno)[index.mat]^2) + 1e-6 ) > 1e-10 ) )
-  ##     return ("LD LASSO constraint violated")
-  ##   }
+  if( length(object@beta) > 0 ){
+      p <- ncol(object@geno)
+      index.mat <- which(cor(object@geno)^2 > object@r2 & lower.tri(matrix(1, p, p)), arr.ind = TRUE )
+      if( any( abs(abs(object@beta[index.mat[,1]]) - abs(object@beta[index.mat[,2]]) ) - ( -object@s2*log(cor(object@geno)[index.mat]^2) + 1e-6 ) > 1e-10 ) )
+      return ("LD LASSO constraint violated")
+    }
   TRUE
 }
 
