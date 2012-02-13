@@ -6,7 +6,7 @@ cleanGeno <- function( ldlasso.obj, ... ){
   index.vec <- which(apply( Xa, 2, mono.test ))
   index.mat <- which(cor(Xa)>0.99999 & !diag(ncol(Xa)), arr.ind = TRUE )
   if(!(nrow(index.mat)==0)){
-    index.mat <- index.mat[diff(index.mat)>0,]
+    index.mat <- index.mat[diff(t(index.mat))>0,]
     if(is.null(dim(index.mat))){
       index.vec <- c( index.vec, index.mat[2] )
     }else{
