@@ -1,20 +1,21 @@
 getCp <- function( ldlasso.obj, B = 10 ){
-  logOR.obj <- logOR( geno = ldlasso.obj@geno, pheno = ldlasso.obj@pheno )
-  y0 <- logOR.obj$y
+#  logOR.obj <- logOR( geno = ldlasso.obj@geno, pheno = ldlasso.obj@pheno )
+  y0 <- ldlasso.obj@logOR.norm #logOR.obj$y
   # Should add a conditional here for when beta has laready been solved
-  beta0 <- solve(ldlasso.obj)
-  bet0.mat <- beta0
+  beta0 <- solve(ldlasso.obj)@beta
+#  bet0.mat <- beta0
   ystar.mat <- c()
   betastar.mat <- c()
   for( b in 1:B ){
     boot.indx <- sample(x = nrow(ldlasso.obj@geno), size = nrow(ldlasso.obj@geno), replace = TRUE)
     Xstar <- ldlasso.obj@geno[boot.indx,]
     Ystar <- ldlasso.obj@pheno[boot.indx]
-    ldlasso.boot.obj <- ldlasso.obj
-    ldlasso.boot.obj@geno <- Xstar
-    ldlasso.boot.obj@pheno <- Ystar    
-    ystar <- logOR( geno = ldlasso.boot.obj@geno, pheno = ldlasso.boot.obj@pheno )$y
-    betastar <- solve( ldlasso.boot.obj )
+    ldlasso.boot.obj <- ldlasso( geno = Xstar, pheno = Ystar, s1 = ldlasso.obj@s1, s2 = ldlasso.obj@s2, r2 = ldlasso.obj@r2 )
+#    ldlasso.boot.obj@geno <- Xstar
+#    ldlasso.boot.obj@pheno <- Ystar    
+    ystar <- ldlasso.boot.obj@logOR.norm #logOR( geno = ldlasso.boot.obj@geno, pheno = ldlasso.boot.obj@pheno )$y
+    ldlasso.star <- solve( ldlasso.boot.obj )
+    betastar <- ldlasso.star@beta
     ystar.mat <- rbind( ystar.mat, ystar )
     betastar.mat <- rbind( betastar.mat, betastar )
   }
