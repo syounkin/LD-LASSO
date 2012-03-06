@@ -17,21 +17,23 @@ p0 <- 0.10 # probability of disease given homo major
 beta <- 100 # "effect size"
 
 hapslist <- GetHaps( geno.mat = geno.mat)
-haps <- hapslist$haps
+haps0 <- data.matrix(hapslist$haps)
 hap.probs <- hapslist$hap.probs
 p <- sum((haps[,causal.index]==1)*hap.probs) # major allele frequency of causal SNP
 
-problist <- GenotypeProb(p0 = p0, beta = beta, p = p)
+problist <- GenotypeProb(beta = beta, hap.probs = hap.probs, haps = haps0)
 pgd <- problist$pgd # probability of genotype, given disease
 pgh <- problist$pgh # probability of genotype, given healthy
 
 # Simulate Case-Control data set with 'size' of each
 size <- 1e3
-sim.data.list <- CC.Sim( pgd = pgd, pgh = pgh, haps = haps, hap.probs = hap.probs, causal.index = causal.index, size = size )
+sim.data.list <- CC.Sim( problist = problist, haps = haps0, hap.probs = hap.probs, causal.index = causal.index, size = size )
 
 geno <- rbind( sim.data.list[[1]], sim.data.list[[2]] )
 pheno <- c( rep(1, size), rep(0, size) )
 
-ldlasso.obj <- ldlasso( geno = geno, pheno = pheno, s1 = NULL, s2 = 1e1, r2 = 0 )
+ldlasso.obj <- ldlasso( geno = geno, pheno = pheno, s1 = NULL, s2 = 1e-1, r2 = 0 )
 
-findS1(ldlasso.obj)
+log10(findS1(ldlasso.obj, loglinear = TRUE)@s1)
+log10(findS1(ldlasso.obj, loglinear = FALSE)@s1)
+
