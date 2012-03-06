@@ -6,8 +6,9 @@ setMethod("findS1", "ldlasso", function( object, ... ) {
   fn.findS1(object, ... )
 })
 
-fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = FALSE ){
-  if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
+fn.findS1 <- function( ldlasso.obj, loglinear = FALSE, coeff = c(-1.62, 0.75 ), iter = 10, alpha = 0.05, tol = 5e-3, setS1 = TRUE, verbose = FALSE ){
+  if( !loglinear ){
+    if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
   if( 2/ncol(ldlasso.obj@geno) > alpha ){
     alpha <- 1/ncol(ldlasso.obj@geno)
     cat( "decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
@@ -50,4 +51,16 @@ fn.findS1 <- function( ldlasso.obj, iter  = 10, alpha = 0.05, tol = 5e-3, setS1 
   if(!validObject(ldlasso.obj)) cat( "warning: invalid object being returned from findS1.\n")
   if( !setS1 ) ldlasso.obj@s1 <- NULL
   return(ldlasso.obj)
+  }else{
+    ldlasso.obj <- ldlasso(geno = ldlasso.obj@geno,
+                             pheno = pheno,
+                             s1 = 10^( coeff[1]+coeff[2]*log10(ldlasso.obj@s2) ),
+                             s2 = ldlasso.obj@s2,
+                             r2 = ldlasso.obj@r2
+                             )
+    ldlasso.obj <- solve(ldlasso.obj)
+    if(!validObject(ldlasso.obj)) cat( "warning: invalid object being returned from findS1.\n")
+    if( !setS1 ) ldlasso.obj@s1 <- NULL
+    return(ldlasso.obj)
+  }
 }
