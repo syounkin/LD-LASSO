@@ -1,7 +1,7 @@
 Package: ldlasso
 Type: Package
 Title: LD LASSO Regression for SNP Association Study (Methods and Classes)
-Version: 3.2
+Version: 12.8.31
 Date: January 10, 2011
 Author: Samuel G. Younkin
 Maintainer: <syounkin@jhsph.edu>
@@ -9,4 +9,4 @@ Description: New object oriented ldlasso package
 License: GPL (>= 2)
 Depends: R (>= 2.13.0),quadprog,methods
 LazyLoad: yes
-Packaged: 2011-12-06; sgy
+Packaged: 2012-8-31; sgy
