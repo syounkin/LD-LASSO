@@ -2,7 +2,7 @@ setGeneric("findS1", function(object, ... ) standardGeneric("findS1"))
 
 setMethod("findS1", "ldlasso", function( object, ... ) {
   if( !is.null(object@s1) )
-    return(cat("s1 is not NULL\nNo changes made.\n"))
+    return(cat("message: s1 is not NULL -- no changes made.\n"))
   fn.findS1(object, ... )
 })
 
@@ -11,7 +11,7 @@ fn.findS1 <- function( ldlasso.obj, loglinear = FALSE, coeff = c(-1.62, 0.75 ), 
     if(verbose) cat( paste( "Null value for s1. Finding s1 for alpha = ", alpha, "...\n", sep = "" ) )
   if( 2/ncol(ldlasso.obj@geno) > alpha ){
     alpha <- 1/ncol(ldlasso.obj@geno)
-    cat( "decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
+    cat( "message: decreasing alpha to 1/number of SNPs = ", alpha , "\n", sep = "" )
   }
   s1.low <- 0; s1.hi <- 1; fp.rate <- 1;
   pheno <- ldlasso.obj@pheno
