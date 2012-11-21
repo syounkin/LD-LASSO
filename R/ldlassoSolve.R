@@ -44,7 +44,7 @@ ldlassoSolve <- function( ldlasso.obj ){
   qp <- solve.QP(Dmat = I_3p, dvec = yc, Amat = A, bvec = b0, meq = p, factorized = FALSE)
   beta <- qp$solution[1:p]
   betac <- c( beta, ifelse( beta > 0, beta, 0 ), ifelse( beta <=0, -beta, 0 ) )
-  good <- all( abs( abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) )  - ldlasso.const  < 1e-6 )
+  good <- all( abs( abs( abs(beta[index.mat[,1]]) - abs(beta[index.mat[,2]]) )  - ldlasso.const ) < 1e-6 )
   err <- sum(ifelse( t(A)%*%betac < b0, b0 - t(A)%*%betac, 0 ))
 ##  cat( err, "\n" )
   if(!good) cat( "message: quadprog err = ", err, "\n", sep = "" )
